@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minesweeper</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 class="title">Minesweeper</h1>
+    </header>
+
+    <div class="toolbar">
+      <div class="stat-box">
+        <span class="stat-label">Mines</span>
+        <span class="stat-value" id="mine-counter">0</span>
+      </div>
+
+      <button class="new-game-btn" id="new-game">New Game</button>
+
+      <div class="stat-box">
+        <span class="stat-label">Time</span>
+        <span class="stat-value" id="timer">0</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <label for="difficulty">Difficulty</label>
+      <select id="difficulty">
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="expert">Expert</option>
+      </select>
+    </div>
+
+    <div class="board" id="board"></div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
