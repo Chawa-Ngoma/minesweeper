@@ -8,6 +8,16 @@
   --border: #999999;
   --gap: 2px;
   --radius: 4px;
+  --cell-size: 28px;
+
+  --n1: #0000fe;
+  --n2: #007b00;
+  --n3: #fe0000;
+  --n4: #00007b;
+  --n5: #7b0000;
+  --n6: #007b7b;
+  --n7: #000000;
+  --n8: #7b7b7b;
 }
 
 * {
@@ -26,8 +36,8 @@ body {
 }
 
 .container {
-  width: 480px;
-  max-width: 90vw;
+  width: auto;
+  max-width: 95vw;
 }
 
 .header {
@@ -94,11 +104,51 @@ body {
   font-size: 0.9rem;
 }
 
+.board-wrapper {
+  max-width: 95vw;
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
+}
+
 .board {
-  display: grid;
+  display: inline-grid;
   gap: var(--gap);
   background: var(--border);
   border-radius: var(--radius);
   padding: var(--gap);
-  min-height: 200px;
 }
+
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cell-bg);
+  box-shadow:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.7),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.25);
+  font-size: calc(var(--cell-size) * 0.55);
+  font-weight: bold;
+  line-height: 1;
+  user-select: none;
+}
+
+.cell.revealed {
+  background: var(--cell-revealed-bg);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+.cell.mine {
+  background: #e08080;
+}
+
+.cell.n1 { color: var(--n1); }
+.cell.n2 { color: var(--n2); }
+.cell.n3 { color: var(--n3); }
+.cell.n4 { color: var(--n4); }
+.cell.n5 { color: var(--n5); }
+.cell.n6 { color: var(--n6); }
+.cell.n7 { color: var(--n7); }
+.cell.n8 { color: var(--n8); }

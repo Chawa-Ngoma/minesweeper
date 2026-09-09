@@ -1,11 +1,31 @@
 // app.js
-// Entry point. Board/renderer/input wiring comes in later phases.
-// For now, just instantiate the model to confirm it's connected.
+// Wires the game model to the renderer: difficulty switching and New Game.
+// No click/flag handling yet — that's Phase 4.
 
-const game = Game.createGame(
-  Game.DIFFICULTIES.beginner.width,
-  Game.DIFFICULTIES.beginner.height,
-  Game.DIFFICULTIES.beginner.mines
-);
+(function () {
 
-console.log("Minesweeper: game model instantiated", game.getStatus());
+const difficultySelect = document.getElementById("difficulty");
+const newGameBtn = document.getElementById("new-game");
+
+let game;
+
+function startNewGame(difficultyKey) {
+  const preset = Game.DIFFICULTIES[difficultyKey];
+  game = Game.createGame(preset.width, preset.height, preset.mines);
+
+  Renderer.renderBoard(game);
+  Renderer.updateMineCounter(game);
+  Renderer.resetTimerDisplay();
+}
+
+difficultySelect.addEventListener("change", () => {
+  startNewGame(difficultySelect.value);
+});
+
+newGameBtn.addEventListener("click", () => {
+  startNewGame(difficultySelect.value);
+});
+
+startNewGame(difficultySelect.value);
+
+})();
