@@ -22,7 +22,7 @@
 
       <div class="stat-box">
         <span class="stat-label">Time</span>
-        <span class="stat-value" id="timer">0</span>
+        <span class="stat-value" id="timer">0:00</span>
       </div>
     </div>
 
@@ -33,15 +33,15 @@
         <option value="intermediate">Intermediate</option>
         <option value="expert">Expert</option>
       </select>
-      <span class="best-time">Best: <span id="best-time">---</span></span>
+      <span class="best-time-label">Best: <span id="best-time">--:--</span></span>
     </div>
 
-    <div class="notice-pill" id="notice-pill" hidden></div>
+    <div class="notice-pill" id="notice-pill" role="status" aria-live="polite" hidden></div>
 
     <div class="board-wrapper">
       <div class="board-frame">
         <canvas class="confetti-canvas" id="confetti-canvas"></canvas>
-        <div class="board" id="board"></div>
+        <div class="board" id="board" aria-label="Minesweeper board"></div>
       </div>
     </div>
   </div>

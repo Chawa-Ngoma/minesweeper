@@ -33,12 +33,24 @@ function renderBoard(game) {
   }
 }
 
+function describeCellForScreenReaders(cellState) {
+  if (cellState.state === "flagged") return "Flagged cell";
+  if (cellState.isMine) return "Mine";
+  if (cellState.state === "revealed") {
+    return cellState.adjacentMines > 0
+      ? `Revealed cell, ${cellState.adjacentMines} adjacent mines`
+      : "Revealed empty cell";
+  }
+  return "Hidden cell";
+}
+
 function createCellElement(game, row, col) {
   const cellState = game.getCell(row, col);
   const cell = document.createElement("div");
   cell.className = "cell";
   cell.dataset.row = String(row);
   cell.dataset.col = String(col);
+  cell.setAttribute("aria-label", describeCellForScreenReaders(cellState));
 
   if (cellState.state === "flagged") {
     cell.classList.add("flagged");

@@ -1,5 +1,5 @@
 :root {
-  --board-bg: #bbbbbb;
+  --page-bg: #f0f0f0;
   --cell-bg: #d0d0d0;
   --cell-revealed-bg: #e8e8e8;
   --text-dark: #333333;
@@ -14,6 +14,10 @@
   --panel-border: #e0e0e0;
   --panel-radius: 10px;
   --text-muted: #767676;
+
+  --win: #2e9e5b;
+  --loss: #c0392b;
+  --mine-bg: #e08080;
 
   --n1: #0000fe;
   --n2: #007b00;
@@ -35,7 +39,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f0f0f0;
+  background: var(--page-bg);
   font-family: "Helvetica Neue", Arial, sans-serif;
   color: var(--text-dark);
 }
@@ -135,11 +139,11 @@ body {
   outline-offset: 1px;
 }
 
-.best-time {
+.best-time-label {
   color: var(--text-muted);
 }
 
-.best-time #best-time {
+.best-time-label #best-time {
   font-weight: 600;
   color: var(--text-dark);
   font-variant-numeric: tabular-nums;
@@ -185,15 +189,12 @@ body {
 
 .cell.revealed {
   cursor: default;
-}
-
-.cell.revealed {
   background: var(--cell-revealed-bg);
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
 }
 
 .cell.mine {
-  background: #e08080;
+  background: var(--mine-bg);
 }
 
 .cell.n1 { color: var(--n1); }
@@ -227,11 +228,11 @@ body {
 }
 
 .notice-pill.win {
-  background: #2e9e5b;
+  background: var(--win);
 }
 
 .notice-pill.loss {
-  background: #c0392b;
+  background: var(--loss);
 }
 
 .confetti-canvas {
