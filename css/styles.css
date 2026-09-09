@@ -133,6 +133,12 @@ body {
   font-weight: bold;
   line-height: 1;
   user-select: none;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.cell.revealed {
+  cursor: default;
 }
 
 .cell.revealed {

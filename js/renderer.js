@@ -56,10 +56,14 @@ function updateMineCounter(game) {
   document.getElementById("mine-counter").textContent = formatCounter(game.getRemainingFlags());
 }
 
-function resetTimerDisplay() {
-  document.getElementById("timer").textContent = formatCounter(0);
+function updateTimerDisplay(seconds) {
+  document.getElementById("timer").textContent = formatCounter(seconds);
 }
 
-return { renderBoard, updateMineCounter, resetTimerDisplay };
+function resetTimerDisplay() {
+  updateTimerDisplay(0);
+}
+
+return { renderBoard, updateMineCounter, updateTimerDisplay, resetTimerDisplay };
 
 })();

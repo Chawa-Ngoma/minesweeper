@@ -155,6 +155,24 @@ function createGame(width, height, mineCount) {
     }
   }
 
+  function chord(row, col) {
+    if (status !== GAME_STATUS.IN_PROGRESS) return;
+
+    const cell = grid[row][col];
+    if (cell.state !== CELL_STATE.REVEALED || cell.adjacentMines === 0) return;
+
+    const neighbors = getNeighborCoords(width, height, row, col);
+    const flaggedNeighborCount = neighbors.filter(
+      ({ row: r, col: c }) => grid[r][c].state === CELL_STATE.FLAGGED
+    ).length;
+
+    if (flaggedNeighborCount !== cell.adjacentMines) return;
+
+    for (const { row: nr, col: nc } of neighbors) {
+      if (grid[nr][nc].state === CELL_STATE.HIDDEN) revealCell(nr, nc);
+    }
+  }
+
   function getCell(row, col) {
     const cell = grid[row][col];
     const view = { state: cell.state, adjacentMines: null, isMine: null };
@@ -185,6 +203,7 @@ function createGame(width, height, mineCount) {
     getCell,
     revealCell,
     toggleFlag,
+    chord,
     getRemainingFlags,
   };
 }
