@@ -32,19 +32,34 @@ function startNewGame(difficultyKey) {
   stopTimer();
   timerStarted = false;
 
+  Renderer.hideNoticePill();
+
   const preset = Game.DIFFICULTIES[difficultyKey];
   game = Game.createGame(preset.width, preset.height, preset.mines);
 
   Renderer.renderBoard(game);
   Renderer.updateMineCounter(game);
   Renderer.resetTimerDisplay();
+  Renderer.updateBestTimeDisplay(BestTimes.getBestTime(difficultyKey));
 }
 
 function syncAfterModelChange() {
   Renderer.renderBoard(game);
   Renderer.updateMineCounter(game);
 
-  if (game.getStatus() !== "in-progress") stopTimer();
+  const status = game.getStatus();
+  if (status === "in-progress") return;
+
+  stopTimer();
+
+  if (status === "won") {
+    const difficultyKey = difficultySelect.value;
+    const { best, isNewBest } = BestTimes.setBestTimeIfLower(difficultyKey, elapsedSeconds);
+    Renderer.updateBestTimeDisplay(best);
+    Renderer.showWinNotice({ elapsedSeconds, isNewBest });
+  } else if (status === "lost") {
+    Renderer.showLossNotice();
+  }
 }
 
 function handleReveal(row, col) {

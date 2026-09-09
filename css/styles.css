@@ -10,6 +10,11 @@
   --radius: 4px;
   --cell-size: 28px;
 
+  --panel-bg: #ffffff;
+  --panel-border: #e0e0e0;
+  --panel-radius: 10px;
+  --text-muted: #767676;
+
   --n1: #0000fe;
   --n2: #007b00;
   --n3: #fe0000;
@@ -59,25 +64,28 @@ body {
 }
 
 .stat-box {
-  background: var(--board-bg);
-  color: var(--text-light);
-  border-radius: var(--radius);
-  padding: 8px 16px;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  color: var(--text-dark);
+  border-radius: var(--panel-radius);
+  padding: 6px 16px;
   text-align: center;
   min-width: 70px;
 }
 
 .stat-label {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
-  opacity: 0.8;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
 }
 
 .stat-value {
   display: block;
-  font-size: 1.25rem;
-  font-weight: bold;
+  font-size: 1.15rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .new-game-btn {
@@ -99,9 +107,42 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 16px;
   font-size: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.controls label {
+  color: var(--text-muted);
+}
+
+.controls select {
+  appearance: none;
+  background: var(--panel-bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" fill="none" stroke="%23767676" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+    no-repeat right 10px center;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  font-family: inherit;
+  padding: 6px 28px 6px 12px;
+  cursor: pointer;
+}
+
+.controls select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.best-time {
+  color: var(--text-muted);
+}
+
+.best-time #best-time {
+  font-weight: 600;
+  color: var(--text-dark);
+  font-variant-numeric: tabular-nums;
 }
 
 .board-wrapper {
@@ -109,6 +150,11 @@ body {
   overflow-x: auto;
   display: flex;
   justify-content: center;
+}
+
+.board-frame {
+  position: relative;
+  display: inline-block;
 }
 
 .board {
@@ -158,3 +204,41 @@ body {
 .cell.n6 { color: var(--n6); }
 .cell.n7 { color: var(--n7); }
 .cell.n8 { color: var(--n8); }
+
+.notice-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 90%;
+  margin: 0 auto 12px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  color: var(--text-light);
+  background: var(--accent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.notice-pill[hidden] {
+  display: none;
+}
+
+.notice-pill.win {
+  background: #2e9e5b;
+}
+
+.notice-pill.loss {
+  background: #c0392b;
+}
+
+.confetti-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  pointer-events: none;
+}

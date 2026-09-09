@@ -1,14 +1,20 @@
 // renderer.js
 // Draws the current game model state into #board, and keeps the mine
-// counter / timer display elements in sync. Pure "draw what I'm told" —
-// no game rules, no click handling, no state of its own.
+// counter / timer / notice-pill display elements in sync. Pure "draw what
+// I'm told" — no game rules, no click handling, no state of its own.
 
 window.Renderer = (function () {
 
-function formatCounter(value) {
-  const sign = value < 0 ? "-" : "";
-  const digits = String(Math.abs(value)).padStart(sign ? 2 : 3, "0");
-  return sign + digits;
+function formatMineCount(value) {
+  return String(value);
+}
+
+// M:SS — zero-padded seconds only, no forced leading zero on minutes
+// (5s -> "0:05", 63s -> "1:03", 720s -> "12:00").
+function formatTime(totalSeconds) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
 function renderBoard(game) {
@@ -53,17 +59,121 @@ function createCellElement(game, row, col) {
 }
 
 function updateMineCounter(game) {
-  document.getElementById("mine-counter").textContent = formatCounter(game.getRemainingFlags());
+  document.getElementById("mine-counter").textContent = formatMineCount(game.getRemainingFlags());
 }
 
 function updateTimerDisplay(seconds) {
-  document.getElementById("timer").textContent = formatCounter(seconds);
+  document.getElementById("timer").textContent = formatTime(seconds);
 }
 
 function resetTimerDisplay() {
   updateTimerDisplay(0);
 }
 
-return { renderBoard, updateMineCounter, updateTimerDisplay, resetTimerDisplay };
+function updateBestTimeDisplay(seconds) {
+  document.getElementById("best-time").textContent =
+    seconds === null || seconds === undefined ? "--:--" : formatTime(seconds);
+}
+
+let confettiFrameId = null;
+let confettiParticles = [];
+
+function startConfetti() {
+  stopConfetti();
+
+  const canvas = document.getElementById("confetti-canvas");
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+
+  const ctx = canvas.getContext("2d");
+  const colors = ["#e74c3c", "#f1c40f", "#2ecc71", "#3498db", "#9b59b6", "#e67e22"];
+
+  // Confined to the shallow strip at the top of the board (see .confetti-canvas
+  // in styles.css) — a brief shower, not a blanket over the grid. Particles
+  // start just above the canvas and are dropped once they fall out of it.
+  confettiParticles = Array.from({ length: 70 }, () => ({
+    x: Math.random() * canvas.width,
+    y: -10 - Math.random() * 80,
+    size: 4 + Math.random() * 4,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    speedY: 1.2 + Math.random() * 2,
+    speedX: (Math.random() - 0.5) * 1.5,
+    rotation: Math.random() * 360,
+    rotationSpeed: (Math.random() - 0.5) * 10,
+  }));
+
+  function tick() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let anyActive = false;
+
+    for (const particle of confettiParticles) {
+      particle.y += particle.speedY;
+      particle.x += particle.speedX;
+      particle.rotation += particle.rotationSpeed;
+      if (particle.y < canvas.height) anyActive = true;
+
+      ctx.save();
+      ctx.translate(particle.x, particle.y);
+      ctx.rotate((particle.rotation * Math.PI) / 180);
+      ctx.fillStyle = particle.color;
+      ctx.fillRect(-particle.size / 2, -particle.size / 2, particle.size, particle.size);
+      ctx.restore();
+    }
+
+    confettiFrameId = anyActive ? requestAnimationFrame(tick) : null;
+  }
+
+  confettiFrameId = requestAnimationFrame(tick);
+}
+
+function stopConfetti() {
+  if (confettiFrameId !== null) cancelAnimationFrame(confettiFrameId);
+  confettiFrameId = null;
+
+  const canvas = document.getElementById("confetti-canvas");
+  if (canvas.width > 0 && canvas.height > 0) {
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
+function showNoticePill(message, kind) {
+  const pill = document.getElementById("notice-pill");
+  pill.textContent = message;
+  pill.classList.remove("win", "loss");
+  pill.classList.add(kind);
+  pill.hidden = false;
+}
+
+function hideNoticePill() {
+  const pill = document.getElementById("notice-pill");
+  pill.hidden = true;
+  pill.classList.remove("win", "loss");
+  stopConfetti();
+}
+
+function showLossNotice() {
+  showNoticePill("You lost — mines revealed below.", "loss");
+}
+
+function showWinNotice({ elapsedSeconds, isNewBest }) {
+  const message = isNewBest
+    ? `You won in ${formatTime(elapsedSeconds)} — new best time!`
+    : `You won in ${formatTime(elapsedSeconds)}`;
+
+  showNoticePill(message, "win");
+  startConfetti();
+}
+
+return {
+  renderBoard,
+  updateMineCounter,
+  updateTimerDisplay,
+  resetTimerDisplay,
+  updateBestTimeDisplay,
+  showLossNotice,
+  showWinNotice,
+  hideNoticePill,
+};
 
 })();
